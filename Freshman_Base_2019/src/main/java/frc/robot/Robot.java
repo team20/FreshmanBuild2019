@@ -5,8 +5,11 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.TimedRobot;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends TimedRobot {
     Joystick driverJoy;
@@ -14,7 +17,9 @@ public class Robot extends TimedRobot {
     TalonSRX fr = new TalonSRX(4); // front right motor
     TalonSRX bl = new TalonSRX(3); // back left motor
     TalonSRX br = new TalonSRX(1); // back right motor
-  
+    boolean startTimeSet = false;
+    double startTime = 0;
+
     @Override
     public void robotInit() { //When the robot starts
         driverJoy = new Joystick(0); // initializes the main controller
@@ -25,6 +30,22 @@ public class Robot extends TimedRobot {
         fl.follow(bl);
         fr.follow(br);
         CameraServer.getInstance().startAutomaticCapture();
+    } 
+
+    @Override
+    public void autonomousPeriodic () {
+        if (startTimeSet == false) {
+            startTime = Timer.getFPGATimestamp();
+            startTimeSet = true;
+        }
+        if (Timer.getFPGATimestamp() - startTime < 2) {
+            bl.set(ControlMode.PercentOutput, (.25));
+            br.set(ControlMode.PercentOutput, (-.25));
+        }
+        else {
+            bl.set(ControlMode.PercentOutput, (0));
+            br.set(ControlMode.PercentOutput, (0));
+        }
     }
 
     @Override
