@@ -91,30 +91,31 @@ public class Robot extends TimedRobot { //implements PIDOutput {
 
     @Override
     public void autonomousPeriodic () {
-    //    if (firstTime) {
-    //       firstTime = false;
-    //        NAVXgyro.reset();
-    //        autostage = 0;
-    //    }
+    
+  //  if (firstTime) {
+  //      firstTime = false;
+   //     NAVXgyro.reset();
+    //    autostage = 0;
+    
+ //   double pulses = Double.valueOf(ToDeg(pulseWidthWithoutOverflows)) + Double.valueOf(ToDeg(selSenPos));
+ //   double turn = (pulses - 180);
 
-    int selSenPos = br.getSelectedSensorPosition(0);
+ int selSenPos = br.getSelectedSensorPosition(0);
 		int pulseWidthWithoutOverflows = 
                 br.getSensorCollection().getPulseWidthPosition() & 0xFFF;
 
 	System.out.print("pulseWidPos:" + pulseWidthWithoutOverflows + "   =>    " + "selSenPos:" + selSenPos);
     System.out.print("      ");
     System.out.print(ToDeg(pulseWidthWithoutOverflows) + ToDeg(selSenPos));
-    System.out.println(); }
-  //  Double.toString((ToDeg(pulseWidthWithoutOverflows) + ToDeg(selSenPos)));
-  //  double turn = ((ToDeg(pulseWidthWithoutOverflows) + ToDeg(selSenPos)) - 180);
+    System.out.println();
+    }
 
-//    if ((ToDeg(pulseWidthWithoutOverflows) + ToDeg(selSenPos)) != turn) {
-    //    br.set(ControlMode.PercentOutput, (.25));
-//    }
-//    else {
-    //    br.set(ControlMode.PercentOutput, (0));
-//    }
-//}
+ /*   if (pulses != turn) {
+        br.set(ControlMode.PercentOutput, (.25));
+    }
+    else {
+        br.set(ControlMode.PercentOutput, (0));
+    } */
 
     public void initQuadrature() {
 		int pulseWidth = br.getSensorCollection().getPulseWidthPosition();
