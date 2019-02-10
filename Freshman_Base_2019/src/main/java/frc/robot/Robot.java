@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class Robot extends TimedRobot { //implements PIDOutput {
@@ -38,11 +39,10 @@ public class Robot extends TimedRobot { //implements PIDOutput {
     
     double distance = 0.0;
     int autostage = 0;
-    final double HAB_TO_CARGO = 10;
-    final double BOT_TO_CARGO = 5;
-    final double DISTANCE_PER_PULSE = 0.0; //placeholder
 
     AHRS NAVXgyro = new AHRS(SerialPort.Port.kMXP);
+
+    boolean done = false;
 
 //    PIDController PID = new PIDController(.01, 0, .01, NAVXgyro, this);
 
@@ -50,17 +50,17 @@ public class Robot extends TimedRobot { //implements PIDOutput {
     public void robotInit() { //When the robot starts
         driverJoy = new Joystick(0); // initializes the main controller
 
-//        bl.configFactoryDefault();
-//        bl.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, kTimeoutMs);
+        bl.configFactoryDefault();
+        bl.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, kTimeoutMs);
         br.configFactoryDefault();
         br.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, kTimeoutMs);
         fl.follow(bl);
         fr.follow(br);
+        br.setSensorPhase(false);
+        bl.setSensorPhase(false);
         CameraServer.getInstance().startAutomaticCapture();
         bl.set(ControlMode.PercentOutput, (.01));
         br.set(ControlMode.PercentOutput, (.01));
-//        int selSenPulse.getDistancePerPulse();
-//        bl.getDistancePerPulse();
         System.out.println(br.getSelectedSensorPosition());
         System.out.println(bl.getSelectedSensorPosition());
         br.getSelectedSensorVelocity();
@@ -72,20 +72,19 @@ public class Robot extends TimedRobot { //implements PIDOutput {
         
     }
 
-  //  private double AverageDistance() {
-  //      return (bl.getDistance() + br.getDistance()) / 2;
-  //  }
-
  @Override
     public void autonomousInit() {
 
-    //    NAVXgyro.reset();
-    //    firstTime = true;
-//        PID.setAbsoluteTolerance(5);
-//        PID.setInputRange(-180, 180);
-//        PID.setOutputRange(-1, 1);
-//        PID.setContinuous();
-//        PID.enable();
+    NAVXgyro.reset();
+    firstTime = true;
+//    PID.setAbsoluteTolerance(5);
+//    PID.setInputRange(-180, 180);
+//    PID.setOutputRange(-1, 1);
+//    PID.setContinuous();
+//    PID.enable();
+
+br.setSensorPhase(true);
+System.out.println(br.getSelectedSensorPosition(0));
 
     }
 
@@ -96,26 +95,41 @@ public class Robot extends TimedRobot { //implements PIDOutput {
   //      firstTime = false;
    //     NAVXgyro.reset();
     //    autostage = 0;
-    
- //   double pulses = Double.valueOf(ToDeg(pulseWidthWithoutOverflows)) + Double.valueOf(ToDeg(selSenPos));
- //   double turn = (pulses - 180);
 
- int selSenPos = br.getSelectedSensorPosition(0);
-		int pulseWidthWithoutOverflows = 
-                br.getSensorCollection().getPulseWidthPosition() & 0xFFF;
+    int selSenPos = br.getSelectedSensorPosition(0); //number of ticks
+    int pulseWidthWithoutOverflows = br.getSensorCollection().getPulseWidthPosition() & 0xFFF;
 
-	System.out.print("pulseWidPos:" + pulseWidthWithoutOverflows + "   =>    " + "selSenPos:" + selSenPos);
-    System.out.print("      ");
-    System.out.print(ToDeg(pulseWidthWithoutOverflows) + ToDeg(selSenPos));
-    System.out.println();
+	// System.out.print("pulseWidPos:" + pulseWidthWithoutOverflows + "   =>    " + "selSenPos:" + selSenPos);
+
+    double pulses = selSenPos;
+    double revolution = Math.abs(pulses/4095.0);
+
+    double distance_traveled = revolution*2*(3.1415629*3);
+    System.out.println("Distance_traveled: " + distance_traveled);
+
+    System.out.print("revolution : " + revolution);
+
+    if (distance_traveled < 110 && !done) {
+        br.set(ControlMode.PercentOutput, (-.5));
+        bl.set(ControlMode.PercentOutput, (.5));
     }
+    else if(distance_traveled>=110) {
+            br.set(ControlMode.PercentOutput, (0));
+            br.getSensorCollection().setQuadraturePosition(10, kTimeoutMs);
+            br.getSensorCollection().setPulseWidthPosition(10, kTimeoutMs);
+            bl.set(ControlMode.PercentOutput, (0));
+            bl.getSensorCollection().setQuadraturePosition(10, kTimeoutMs);
+            bl.getSensorCollection().setPulseWidthPosition(10, kTimeoutMs);
+            done = true;
+        }
+        else{
+            System.out.println("ERROR");
+            pulses = 0;
+            distance_traveled = 0;
+            revolution = 0;
 
- /*   if (pulses != turn) {
-        br.set(ControlMode.PercentOutput, (.25));
+        }
     }
-    else {
-        br.set(ControlMode.PercentOutput, (0));
-    } */
 
     public void initQuadrature() {
 		int pulseWidth = br.getSensorCollection().getPulseWidthPosition();
@@ -129,12 +143,10 @@ public class Robot extends TimedRobot { //implements PIDOutput {
 			pulseWidth -= newCenter;
 		}
 
-		pulseWidth = pulseWidth & 0xFFF;
-
 		br.getSensorCollection().setQuadraturePosition(pulseWidth, kTimeoutMs);
     }
 
-String ToDeg(int units) {
+String ToDeg (int units) {
 		double deg = units * 360.0 / 4096.0;
 
 		/* truncate to 0.1 res */
@@ -146,9 +158,7 @@ String ToDeg(int units) {
 
     }
 
-    /*    if (autostage == 0) {
-            distance = AverageDistance();
-            System.out.println(distance);
+/*    if (autostage == 0) {
             if (distance < HAB_TO_CARGO) {
                 bl.set(ControlMode.PercentOutput, (-.25));
                 br.set(ControlMode.PercentOutput, (.25));
@@ -196,7 +206,8 @@ String ToDeg(int units) {
         }
     }
 */
-/*    @Override
+
+    @Override
     public void teleopPeriodic () { //When you get to start moving the robot
         double straight = (driverJoy.getRawAxis(1)); // amount up or down on the left toggle
         double leftTurn = (driverJoy.getRawAxis(3));
@@ -207,7 +218,7 @@ String ToDeg(int units) {
         br.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
    }
 
-    @Override
+/*    @Override
     public void pidWrite(double output) {
         PIDValue = output;
     } */
