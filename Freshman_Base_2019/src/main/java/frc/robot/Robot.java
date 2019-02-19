@@ -10,23 +10,24 @@ import edu.wpi.first.wpilibj.TimedRobot;
 //import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends TimedRobot {
-    Joystick driverJoy;
-    Joystick operatorJoy;
+    static Joystick driverJoy;
+    static Joystick operatorJoy;
 
-    boolean firstTime = true;
+    static boolean firstTime = true;
 
     final int firstDistance = 120;
     final int secondDistance = 60;
 
-    int autostage = 0;
+    static int autostage = 0;
 
     static AHRS NAVXgyro = new AHRS(SerialPort.Port.kMXP);
 
-    Drive drivingClass = new Drive();
-    Intake spinningIntake = new Intake();
-    Shooter shootNow = new Shooter();
-    Pneumatics maticsMatics = new Pneumatics();
-    LineFollower testTest = new LineFollower();
+    static Drive drivingClass = new Drive();
+    static Intake spinningIntake = new Intake();
+    static Shooter shootNow = new Shooter();
+    static Pneumatics maticsMatics = new Pneumatics();
+    static LineFollower testTest = new LineFollower();
+    static AutoCompilation autos = new AutoCompilation();
 
     @Override
     public void robotInit() {
@@ -52,25 +53,9 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousPeriodic() {
 
-        if (firstTime) {
-            firstTime = false;
-            NAVXgyro.reset();
-            autostage = 0;
-        }
-        if (autostage == 0) {
-            if (drivingClass.moveDistance(120, .5)) {
-                autostage++;
-            }
-        } else if (autostage == 1) {
-            if (drivingClass.turnAngle(-60)) {
-                autostage++;
-            }
-        } else if (autostage == 2) {
-            if (drivingClass.moveDistance(60, .5)) {
-                System.out.println("This ACTUALLY works!!!");
-                autostage++;
-            }
-        }
+        autos.firstAuto(120, .5, -60, 60, .5);
+        autos.secondAuto(.5, false, true, false, false);
+
     }
 
     @Override
@@ -86,7 +71,13 @@ public class Robot extends TimedRobot {
     }
 
     @Override
+    public void testInit() {
+    }
+
+    @Override
     public void testPeriodic() {
-        testTest.liney();
+        testTest.linay();
+        testTest.getValues();
+    //    testTest.wheresLinay();
     }
 }

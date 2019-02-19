@@ -23,13 +23,13 @@ public class Drive implements PIDOutput {
     final int kBookEnd_1 = 1137;
 
     public Drive() {
-        fl = new TalonSRX(2);
-        fr = new TalonSRX(4);
-        bl = new TalonSRX(3);
-        br = new TalonSRX(1);
+        fl = new TalonSRX(9);
+        fr = new TalonSRX(2);
+        bl = new TalonSRX(8);
+        br = new TalonSRX(3);
         fl.follow(bl);
         fr.follow(br);
-        br.setSensorPhase(true); // TODO: might need to change this to false
+        br.setSensorPhase(true); // TODO: might need to change these to false
         bl.setSensorPhase(true);
         bl.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 1000);
         br.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 1000);
