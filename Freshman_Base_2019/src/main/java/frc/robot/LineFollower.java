@@ -3,27 +3,56 @@ package frc.robot;
 import edu.wpi.first.wpilibj.AnalogInput;
 
 public class LineFollower {
-    AnalogInput ai;
-    AnalogInput ai2;
-    AnalogInput ai3;
-    AnalogInput ai4;
+    AnalogInput blue;
+    AnalogInput yellow;
+    AnalogInput white;
+    AnalogInput green;
+    int blueValue;
+    int yellowValue;
+    int whiteValue;
+    int greenValue;
+    static Drive drive;
+    boolean startTimeSet;
+    double startTime;
 
     public LineFollower() {
-        ai = new AnalogInput(0);
-        ai2 = new AnalogInput(1);
-        ai3 = new AnalogInput(2);
-        ai4 = new AnalogInput(3);
+        drive = new Drive();
+        startTimeSet = false;
+        startTime = 0.0;
     }
 
-    public void liney() {
-        int raw = ai.getValue();
-        int raw2 = ai2.getValue();
-        int raw3 = ai3.getValue();
-        int raw4 = ai4.getValue();
-        System.out.println("0: " + raw);
-        System.out.println("1: " + raw2);
-        System.out.println("2: " + raw3);
-        System.out.println("3: " + raw4);
+    public void getValues() {
+        blue = new AnalogInput(0);
+    //    yellow = new AnalogInput(1);
+    //    white = new AnalogInput(3);
+    //    green = new AnalogInput(2);
+        blueValue = blue.getValue();
+        // yellowValue = yellow.getValue();
+        // whiteValue = white.getValue();
+        // greenValue = green.getValue();
+    }
+    
+    public void linay() {
+        System.out.println("Blue: " + blueValue);
+        // System.out.println("Yellow: " + yellowValue);
+        // System.out.println("White: " + whiteValue);
+        // System.out.println("Green: " + greenValue);
+    }
 
+    public void wheresLinay() {
+        if (yellowValue > 1000 && greenValue > 1000) { //we're on target
+            System.out.println("Locked on target.");
+            if (Robot.driverJoy.getRawButton(7) == true) {
+                drive.moveDistance(18, .5);
+            }
+        }
+        else if (yellowValue < 1000 && greenValue < 1000) { //make a turn to find target
+            System.out.println("NOT on target. I repeat: NOT on target.");
+            System.out.println("Yellow: " + yellowValue);
+            System.out.println("Green: " + greenValue);
+            if (Robot.driverJoy.getRawButton(8) == true) {
+                drive.turnAngle(1);
+            }
+        }
     }
 }
