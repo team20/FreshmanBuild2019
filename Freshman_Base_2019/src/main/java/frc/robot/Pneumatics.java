@@ -11,7 +11,7 @@ public class Pneumatics {
     public Pneumatics() {
         Compressor compressor = new Compressor();
         compressor.setClosedLoopControl(true);
-        grabbyClaw = new DoubleSolenoid(0, 1);
+        grabbyClaw = new DoubleSolenoid(0, 1); //first number is forward channel, second number is reverse channel
         hatchCollector = new DoubleSolenoid(2, 3);
     }
 
