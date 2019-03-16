@@ -25,9 +25,9 @@ public class LineFollower {
 
     public void getValues() {
         // blue = new AnalogInput(0); //outside values
-        yellow = new AnalogInput(1); //inside values, good values
-        white = new AnalogInput(3); //outside values, bad values
-        green = new AnalogInput(2); //inside values, good values
+        yellow = new AnalogInput(1); //inside values
+        white = new AnalogInput(3); //outside values
+        green = new AnalogInput(2); //inside values
         orange = new AnalogInput(0); //inside values
         // blueValue = blue.getValue();
         yellowValue = yellow.getValue();
@@ -46,13 +46,13 @@ public class LineFollower {
 
     public void wheresLinay() {
         if (yellowValue > 1000 && greenValue > 1000 && orangeValue > 1000) { //we're on target
-            System.out.println("Locked on target. I repeat: Locked on target.");
+            System.out.println("Locked on target.");
             if (Robot.driverJoy.getRawButton(7) == true) {
                 drive.moveDistance(18, .5);
             }
         }
         else if (yellowValue < 1000 || greenValue < 1000 || orangeValue < 1000) { //we need to make a turn to find target
-            System.out.println("NOT on target. I repeat: NOT on target. Death is imminent.");
+            System.out.println("NOT on target.");
             System.out.println("Yellow: " + yellowValue);
             System.out.println("Green: " + greenValue);
             System.out.println("Orange: " + orangeValue);

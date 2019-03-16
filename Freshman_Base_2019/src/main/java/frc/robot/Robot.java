@@ -66,6 +66,7 @@ public class Robot extends TimedRobot {
      // drivingClass.tankDrive(driverJoy.getRawAxis(1), driverJoy.getRawAxis(5));
       // y is stop
       // b is half forward
+
       // a is full forward
       // x is full backwards
     }
