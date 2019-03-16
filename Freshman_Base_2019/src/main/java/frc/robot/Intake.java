@@ -8,7 +8,7 @@ public class Intake {
     double intakeSpeed;
 
     public Intake() {
-        intake = new TalonSRX(7);
+        intake = new TalonSRX(5);
     }
 
     public void spinIntake(double intakeSpeed) {

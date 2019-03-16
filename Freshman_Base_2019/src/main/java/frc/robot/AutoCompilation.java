@@ -12,50 +12,33 @@ public class AutoCompilation {
         startTime = 0;
     }
 
-    public void firstAuto(double firstDistance, double firstSpeed, double setpoint, double secondDistance,
-            double secondSpeed) {
+    public boolean pickUpTheBall(double intakeSpeed, double stopSpeed) {
         if (Robot.firstTime) {
             Robot.firstTime = false;
             Robot.NAVXgyro.reset();
-            Robot.autostage = 0;
         }
-        if (Robot.autostage == 0) {
-            if (Robot.drivingClass.moveDistance(firstDistance, firstSpeed)) {
-                Robot.autostage++;
-            }
-        } else if (Robot.autostage == 1) {
-            if (Robot.drivingClass.turnAngle(setpoint)) {
-                Robot.autostage++;
-            }
-        } else if (Robot.autostage == 2) {
-            if (Robot.drivingClass.moveDistance(secondDistance, secondSpeed)) {
-                Robot.autostage++;
-            }
+        if (Timer.getFPGATimestamp() - startTime <= .5) {
+            Robot.spinningIntake.spinIntake(intakeSpeed);
+            return false;
+        }
+        else {
+            Robot.spinningIntake.spinIntake(stopSpeed);
+            return true;
         }
     }
-
-    public void secondAuto(double intakeSpeed, boolean stop, boolean half, boolean full, boolean back) {
+    
+    public boolean shootTheBall(boolean stop, boolean half, boolean full, boolean back, boolean fullStop, boolean fullHalf, boolean fullFull, boolean fullBack) {
         if (Robot.firstTime) {
             Robot.firstTime = false;
             Robot.NAVXgyro.reset();
-            Robot.autostage = 0;
         }
-        if (startTimeSet == false) {
-            startTime = Timer.getFPGATimestamp();
-            startTimeSet = true;
+        if (Timer.getFPGATimestamp() - startTime <= 2) {
+            Robot.shootNow.operatorShoot(stop, half, full, back);
+            return false;
         }
-        if (Robot.autostage == 0) {
-            if (Timer.getFPGATimestamp() - startTime <= 2) {
-                Robot.spinningIntake.spinIntake(intakeSpeed);
-            } else {
-                Robot.autostage++;
-            }
-        } else if (Robot.autostage == 1) {
-            if (Timer.getFPGATimestamp() - startTime <= 3) {
-                Robot.shootNow.driverShoot(stop, half, full, back);
-            } else {
-                Robot.autostage++;
-            }
+        else {
+            Robot.shootNow.operatorShoot(fullStop, fullHalf, fullFull, fullBack);
+            return true;
         }
     }
 }

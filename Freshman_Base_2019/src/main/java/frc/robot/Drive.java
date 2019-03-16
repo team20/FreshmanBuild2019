@@ -23,12 +23,14 @@ public class Drive implements PIDOutput {
     final int kBookEnd_1 = 1137;
 
     public Drive() {
-        fl = new TalonSRX(9);
+        fl = new TalonSRX(1);
         fr = new TalonSRX(2);
-        bl = new TalonSRX(8);
-        br = new TalonSRX(3);
+        bl = new TalonSRX(3);
+        br = new TalonSRX(4);
         fl.follow(bl);
         fr.follow(br);
+        br.configOpenloopRamp(0.4);
+        bl.configOpenloopRamp(0.4);
         br.setSensorPhase(true); // TODO: might need to change these to false
         bl.setSensorPhase(true);
         bl.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 1000);
@@ -55,8 +57,13 @@ public class Drive implements PIDOutput {
     }
 
     public void move(double straight, double rightTurn, double leftTurn) {
-        bl.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
-        br.set(ControlMode.PercentOutput, (-straight - rightTurn + leftTurn));
+        bl.set(ControlMode.PercentOutput, (-straight - rightTurn + leftTurn));
+        br.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
+    }
+
+    public void tankDrive(double left, double right) {
+        bl.set(ControlMode.PercentOutput, (left));
+        br.set(ControlMode.PercentOutput, (right));
     }
 
     public boolean moveDistance(double distance, double speed) {
