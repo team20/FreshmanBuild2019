@@ -12,32 +12,32 @@ public class AutoCompilation {
         startTime = 0;
     }
 
-    public boolean pickUpTheBall(double intakeSpeed, double stopSpeed) {
+    public boolean pickUpTheBall(boolean forward, boolean reverse, boolean stop) {
         if (Robot.firstTime) {
             Robot.firstTime = false;
             Robot.NAVXgyro.reset();
         }
-        if (Timer.getFPGATimestamp() - startTime <= .5) {
-            Robot.spinningIntake.spinIntake(intakeSpeed);
+        if (Timer.getFPGATimestamp() - startTime <= 5) {
+            Robot.spinningIntake.spinIntake(forward, reverse, stop);
             return false;
         }
         else {
-            Robot.spinningIntake.spinIntake(stopSpeed);
+            Robot.spinningIntake.spinIntake(false, false, false);
             return true;
         }
     }
     
-    public boolean shootTheBall(boolean stop, boolean half, boolean full, boolean back, boolean fullStop, boolean fullHalf, boolean fullFull, boolean fullBack) {
+    public boolean shootTheBall(double shoot, double halfShoot) {
         if (Robot.firstTime) {
             Robot.firstTime = false;
             Robot.NAVXgyro.reset();
         }
         if (Timer.getFPGATimestamp() - startTime <= 2) {
-            Robot.shootNow.operatorShoot(stop, half, full, back);
+            Robot.shootNow.operatorShoot(shoot, halfShoot);;
             return false;
         }
         else {
-            Robot.shootNow.operatorShoot(fullStop, fullHalf, fullFull, fullBack);
+            Robot.shootNow.operatorShoot(0,0);
             return true;
         }
     }

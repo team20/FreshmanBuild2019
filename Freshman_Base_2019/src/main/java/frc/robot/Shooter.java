@@ -10,30 +10,23 @@ public class Shooter {
         shooter = new TalonSRX(6);
     }
 
-    // public void driverShoot(boolean noShooter, boolean halfShooter, boolean fullShooter, boolean backShooter) {
-    //     if (noShooter == true) {
-    //         shooter.set(ControlMode.PercentOutput, 0);
-    //     } else if (halfShooter == true) {
-    //         shooter.set(ControlMode.PercentOutput, -.1);
-    //     } else if (fullShooter == true) {
-    //         shooter.set(ControlMode.PercentOutput, -1);
-    //     } else if (backShooter == true) {
-    //         shooter.set(ControlMode.PercentOutput, 1);
-    //     }
-    // }
-
-    public void operatorShoot(boolean operatorNoShooter, boolean operatorHalfShooter, boolean operatorFullShooter, boolean operatorBackShooter) {
-        if (operatorNoShooter == true) { //a = 1, b = 2, x = 3, y =4
-            shooter.set(ControlMode.PercentOutput, 0);
-        } else if (operatorHalfShooter == true) {
-            shooter.set(ControlMode.PercentOutput, -.5);
-        } else if (operatorFullShooter == true) {
+    public void operatorShoot(double go, double halfShoot) {
+        if (Math.abs(go) > 0.1) {
             shooter.set(ControlMode.PercentOutput, -1);
-        } else if (operatorBackShooter == true) {
-            shooter.set(ControlMode.PercentOutput, 1);
+        } else if (Math.abs(halfShoot) > 0.1) {
+            shooter.set(ControlMode.PercentOutput, -.5);
+        } else if (Robot.driverJoy.getRawButton(1) == true) {
+            shooter.set(ControlMode.PercentOutput, -1);
+        } else if (Robot.driverJoy.getRawButton(4) == true) {
+            shooter.set(ControlMode.PercentOutput, -1);
+        } else if (Robot.driverJoy.getRawButton(2) == true) {
+            shooter.set(ControlMode.PercentOutput, 0);
+        } else {
+            shooter.set(ControlMode.PercentOutput, 0);
         }
     }
-    // public void testTestTest(double speed) {
-    //     shooter.set(ControlMode.PercentOutput, speed);
-    // }
+
+    public void go(int speed) {
+        shooter.set(ControlMode.PercentOutput, speed);
+    }
 }

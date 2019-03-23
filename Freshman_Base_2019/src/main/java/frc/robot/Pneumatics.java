@@ -11,27 +11,30 @@ public class Pneumatics {
     public Pneumatics() {
         Compressor compressor = new Compressor();
         compressor.setClosedLoopControl(true);
-        grabbyClaw = new DoubleSolenoid(0, 1); //first number is forward channel, second number is reverse channel
-        hatchCollector = new DoubleSolenoid(2, 3);
+        grabbyClaw = new DoubleSolenoid(2, 3); //first number is forward channel, second number is reverse channel
+        hatchCollector = new DoubleSolenoid(0, 1);
     }
 
-    public void openGrabbyClaw(double grabbyOpenPosition) {
-        if (grabbyOpenPosition > 0.0) {
+    public void openGrabbyClaw(double grabbyClosePosition) {
+        if (grabbyClosePosition > 0.1) {
             grabbyClaw.set(DoubleSolenoid.Value.kForward);
         }
-    }
-
-    public void closeGrabbyClaw(double grabbyClosePosition) {
-        if (grabbyClosePosition > 0.0) {
+        else {
             grabbyClaw.set(DoubleSolenoid.Value.kReverse);
         }
     }
 
-    public void hatchCollector(double hatchPosition) {
-        if (hatchPosition > 0.0) {
-            hatchCollector.set(DoubleSolenoid.Value.kForward);
-        } else if (hatchPosition < 0.0) {
+    // public void closeGrabbyClaw(double grabbyClosePosition) {
+    //     if (grabbyClosePosition > 0.1) {
+    //         grabbyClaw.set(DoubleSolenoid.Value.kReverse);
+    //     }
+    // }
+
+    public void hatchCollector(boolean goForward, boolean goBackwards) {
+        if (goForward == true) {
             hatchCollector.set(DoubleSolenoid.Value.kReverse);
+        } else if (goBackwards == true) {
+            hatchCollector.set(DoubleSolenoid.Value.kForward);
         }
     }
 }

@@ -21,6 +21,8 @@ public class Drive implements PIDOutput {
     final boolean kDiscontinuityPresent = true;
     final int kBookEnd_0 = 910;
     final int kBookEnd_1 = 1137;
+    int startDistance;
+    boolean startDistanceSet;
 
     public Drive() {
         fl = new TalonSRX(1);
@@ -31,7 +33,7 @@ public class Drive implements PIDOutput {
         fr.follow(br);
         br.configOpenloopRamp(0.4);
         bl.configOpenloopRamp(0.4);
-        br.setSensorPhase(true); // TODO: might need to change these to false
+        br.setSensorPhase(true);
         bl.setSensorPhase(true);
         bl.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 1000);
         br.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 1000);
@@ -41,8 +43,9 @@ public class Drive implements PIDOutput {
         br.config_kI(0, 0.0);
         bl.config_kD(0, 0.0);
         br.config_kD(0, 0.0);
-        distance_traveled = br.getSelectedSensorPosition();
         firstTime = false;
+        startDistance = 0;
+        startDistanceSet = false;
         
         PID = new PIDController(.01, 0.0, .01, Robot.NAVXgyro, this);
         
@@ -67,9 +70,17 @@ public class Drive implements PIDOutput {
     }
 
     public boolean moveDistance(double distance, double speed) {
-        if (distance_traveled < distance) {
-            br.set(ControlMode.Position, distance * ticksPerInch);
-            bl.set(ControlMode.Position, distance * ticksPerInch);
+        if (startDistanceSet == false) {
+            startDistance = (br.getSelectedSensorPosition());
+            startDistanceSet = true;
+        }
+        distance_traveled = ((br.getSelectedSensorPosition()) - startDistance)/ticksPerInch;
+        System.out.println("backright encoder" + br.getSelectedSensorPosition());
+        System.out.println("startDistance" + startDistance);
+        System.out.println("distance_traveled" + distance_traveled);
+        if (Math.abs(distance_traveled) < distance) {
+            br.set(ControlMode.PercentOutput, -1*(speed));
+            bl.set(ControlMode.PercentOutput, speed);
             return false;
         } else {
             br.set(ControlMode.PercentOutput, (0));
@@ -79,10 +90,13 @@ public class Drive implements PIDOutput {
         }
     }
 
+
     public boolean turnAngle(double setpoint) {
         if (firstTime == false) {
             firstTime = true;
+        //    PID.enable(); ???
             PID.setSetpoint(setpoint);
+            Robot.NAVXgyro.reset();
         }
         if (!PID.onTarget()) {
             System.out.println("Angle: " + PIDValue);
