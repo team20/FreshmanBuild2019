@@ -64,15 +64,16 @@ public class Robot extends TimedRobot {
     //   }
       //  drivingClass.turnAngle(60);
 
+
     }
 
     @Override
     public void teleopPeriodic() {
     
         drivingClass.move(driverJoy.getRawAxis(1)*.75, driverJoy.getRawAxis(2)*.75, driverJoy.getRawAxis(3)*.75);
-       // drivingClass.move(-.5,0,0);
         spinningIntake.spinIntake(driverJoy.getRawButton(1), driverJoy.getRawButton(4), driverJoy.getRawButton(2));
-        shootNow.operatorShoot(operatorJoy.getRawAxis(1), operatorJoy.getRawAxis(5)/2);
+        shootNow.operatorShoot(operatorJoy.getRawAxis(1), operatorJoy.getRawAxis(5));
+    //    shootNow.go(operatorJoy.getRawAxis(1));
         maticsMatics.openGrabbyClaw(operatorJoy.getRawAxis(2));
     //    maticsMatics.closeGrabbyClaw(operatorJoy.getRawAxis(3));
         maticsMatics.hatchCollector(operatorJoy.getRawButton(3), operatorJoy.getRawButton(1));
