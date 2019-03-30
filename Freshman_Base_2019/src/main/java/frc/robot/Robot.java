@@ -3,11 +3,11 @@ package frc.robot;
 //import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.cameraserver.CameraServer;
 //import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.
-wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.TimedRobot;
 //import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends TimedRobot {
@@ -15,10 +15,10 @@ public class Robot extends TimedRobot {
     static Joystick operatorJoy;
 
     static boolean firstTime = true;
+    static boolean buttonEnable = false, buttonPrev = false;
 
     final int firstDistance = 120;
     final int secondDistance = 60;
-
 
     static int autostage = 0;
 
@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         driverJoy = new Joystick(0);
         operatorJoy = new Joystick(1);
-      //  CameraServer.getInstance().startAutomaticCapture();
+        CameraServer.getInstance().startAutomaticCapture();
         NAVXgyro.reset();
         drivingClass.initQuadrature();
     }
@@ -53,35 +53,44 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-      if (startAuto == false && autos.firstAuto(true, false, false, 1, 0, 60, .25, 60)) {
-          startAuto = true;
-      }
-      //  spinningIntake.spinIntake(true, false, true);
-      //  
-     // shootNow.operatorShoot(operatorJoy.getRawAxis(1), operatorJoy.getRawAxis(5)/2);
-    //   if (startAuto == false && drivingClass.moveDistance(24.0, .25) == true) {
-    //     startAuto = true;
-    //   }
-      //  drivingClass.turnAngle(60);
 
+        // if (startAuto == false && autos.firstAuto(true, false, false, 1, 0, 60, .25, 60)) {
+        //     startAuto = true;
+        // }
+        // spinningIntake.spinIntake(true, false, true);
+        //
+        // shootNow.operatorShoot(operatorJoy.getRawAxis(1),
+        // operatorJoy.getRawAxis(5)/2);
+        // if (startAuto == false && drivingClass.moveDistance(24.0, .25) == true) {
+        // startAuto = true;
+        // }
+        // drivingClass.turnAngle(60);
 
     }
 
-    @Override
-    public void teleopPeriodic() {
-    
+     @Override
+     public void teleopPeriodic() {
+    //     boolean bButtonPress = driverJoy.getRawButton(2);
+    //     if (bButtonPress && !buttonPrev) {
+    //         buttonEnable = !buttonEnable;
+    //     }
+    //     buttonPrev = bButtonPress;
+    //     double straightSpeed = driverJoy.getRawAxis(1) * .75;
+    //     double speedLeft = driverJoy.getRawAxis(2) * .75;
+    //     double speedRight = driverJoy.getRawAxis(3) * .75;
+    //     if (buttonEnable == false) {
+    //         straightSpeed = -1*(straightSpeed);
+    //         speedLeft = -1*(speedLeft);
+    //         speedRight = -1*(speedRight);
+    //     }
+
         drivingClass.move(driverJoy.getRawAxis(1)*.75, driverJoy.getRawAxis(2)*.75, driverJoy.getRawAxis(3)*.75);
         spinningIntake.spinIntake(driverJoy.getRawButton(1), driverJoy.getRawButton(4), driverJoy.getRawButton(2));
-        shootNow.operatorShoot(operatorJoy.getRawAxis(1), operatorJoy.getRawAxis(5));
-    //    shootNow.go(operatorJoy.getRawAxis(1));
+       shootNow.operatorShoot(operatorJoy.getRawAxis(1), operatorJoy.getRawAxis(5));
         maticsMatics.openGrabbyClaw(operatorJoy.getRawAxis(2));
-    //    maticsMatics.closeGrabbyClaw(operatorJoy.getRawAxis(3));
         maticsMatics.hatchCollector(operatorJoy.getRawButton(3), operatorJoy.getRawButton(1));
-     //   lineFollower.wheresLinay(driverJoy.getRawButton(7), driverJoy.getRawButton(8));
-      //  shootNow.operatorShoot(.5, 0);
+        // lineFollower.wheresLinay(driverJoy.getRawButton(7),
     }
-
-
 
     @Override
     public void testInit() {
@@ -90,7 +99,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testPeriodic() {
-      //  lineFollower.linay(); 
-    //  shootNow.operatorShoot(1, 0);
+        // lineFollower.linay();
+        // shootNow.operatorShoot(1, 0);
     }
 }
