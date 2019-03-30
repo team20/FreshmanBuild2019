@@ -1,24 +1,24 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 public class Shooter {
-    TalonSRX shooter;
+    VictorSPX shooter;
 
     public Shooter() {
-        shooter = new TalonSRX(6);
+        shooter = new VictorSPX(6);
     }
 
     public void operatorShoot(double go, double halfShoot) {
-        if (Math.abs(go) > 0.5) {
+        if (go < -0.5) {
             shooter.set(ControlMode.PercentOutput, -1);
-        } else if (Math.abs(go) < -0.5) {
+        } else if (go > 0.5) {
             shooter.set(ControlMode.PercentOutput, 1);
-        } else if (Math.abs(halfShoot) > 0.5) {
-            shooter.set(ControlMode.PercentOutput, -.5);
-        } else if (Math.abs(halfShoot) < -0.5) {
-            shooter.set(ControlMode.PercentOutput, .5);
+        } else if (halfShoot < -0.5) {
+            shooter.set(ControlMode.PercentOutput, -.6);
+        } else if (halfShoot > 0.5) {
+            shooter.set(ControlMode.PercentOutput, .6);
         }
         // } else if (Robot.driverJoy.getRawButton(1) == true) {
         //     shooter.set(ControlMode.PercentOutput, -1);
@@ -30,9 +30,5 @@ public class Shooter {
         else {
             shooter.set(ControlMode.PercentOutput, 0);
         }
-    }
-
-    public void go(double speed) {
-        shooter.set(ControlMode.PercentOutput, speed);
     }
 }

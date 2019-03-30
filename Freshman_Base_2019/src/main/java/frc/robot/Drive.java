@@ -14,7 +14,7 @@ public class Drive implements PIDOutput {
     TalonSRX br;
     double distance_traveled;
     final int ticksPerInch = 233;
-    boolean firstTime;
+    boolean firstTime,toggle=true;
     PIDController PID;
     double PIDValue;
     final int kTimeoutMs = 30;
@@ -23,6 +23,7 @@ public class Drive implements PIDOutput {
     final int kBookEnd_1 = 1137;
     int startDistance;
     boolean startDistanceSet;
+    boolean toggleMove = false;
 
     public Drive() {
         fl = new TalonSRX(1);
@@ -60,13 +61,8 @@ public class Drive implements PIDOutput {
     }
 
     public void move(double straight, double rightTurn, double leftTurn) {
-        bl.set(ControlMode.PercentOutput, (-straight - rightTurn + leftTurn));
-        br.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
-    }
-
-    public void tankDrive(double left, double right) {
-        bl.set(ControlMode.PercentOutput, (left));
-        br.set(ControlMode.PercentOutput, (right));
+        bl.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
+        br.set(ControlMode.PercentOutput, (-straight - rightTurn + leftTurn));
     }
 
     public boolean moveDistance(double distance, double speed) {
@@ -89,6 +85,11 @@ public class Drive implements PIDOutput {
             return true;
         }
     }
+
+    // public void kevinsDrive(double straight, double rightTurn, double leftTurn){
+    //         bl.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
+    //         br.set(ControlMode.PercentOutput, (-straight - rightTurn + leftTurn));     
+    // }
 
 
     public boolean turnAngle(double setpoint) {
