@@ -1,21 +1,21 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.AnalogInput;
 
 public class LineFollower {
-    AnalogInput blue;
-    AnalogInput yellow;
-    AnalogInput white;
-    AnalogInput green;
-    AnalogInput orange;
-    int blueValue;
-    int yellowValue;
-    int whiteValue;
-    int greenValue;
-    int orangeValue;
+    AnalogInput blue = new AnalogInput(0);
+    AnalogInput yellow = new AnalogInput(1);
+    AnalogInput white = new AnalogInput(3);
+    AnalogInput green = new AnalogInput(2);
     static Drive drive;
     boolean startTimeSet;
     double startTime;
+    // int yellowValue = yellow.getValue();
+    // int whiteValue = white.getValue();
+    // int greenValue = green.getValue();
+    // int blueValue = blue.getValue();
 
     public LineFollower() {
         drive = new Drive();
@@ -23,48 +23,38 @@ public class LineFollower {
         startTime = 0.0;
     }
 
-    public void getValues() {
-        // blue = new AnalogInput(0); //outside values
-        yellow = new AnalogInput(1); // inside values
-        white = new AnalogInput(3); // outside values
-        green = new AnalogInput(2); // inside values
-        orange = new AnalogInput(0); // inside values
-        // blueValue = blue.getValue();
-        yellowValue = yellow.getValue();
-        whiteValue = white.getValue();
-        greenValue = green.getValue();
-        orangeValue = orange.getValue();
-    }
-
     public void linay() {
+        // int yellowValue = yellow.getValue();
+        // int whiteValue = white.getValue();
+        // int greenValue = green.getValue();
+        // int blueValue = blue.getValue();
+        // System.out.println("Yellow: " + yellowValue);
+        // System.out.println("White: " + whiteValue);
+        // System.out.println("Green: " + greenValue);
         // System.out.println("Blue: " + blueValue);
-        System.out.println("Yellow: " + yellowValue);
-        System.out.println("White: " + whiteValue);
-        System.out.println("Green: " + greenValue);
-        System.out.println("Orange: " + orangeValue);
     }
 
-    public void wheresLinay(boolean weAreGood, boolean weWantToAdjust) {
-        if (Robot.driverJoy.getRawButton(3) == true) {
-            if (yellowValue > 1000 && greenValue > 1000 && orangeValue > 1000) { // we're on target
+    public void wheresLinay() {
+        int yellowValue = yellow.getValue();
+        int greenValue = green.getValue();
+        if (Robot.driverJoy.getRawButton(3)) {
+            System.out.println("Yellow: " + yellowValue);
+            System.out.println("Green: " + greenValue);
+            if (yellowValue > 1500 && greenValue > 1500) { // we're on target
                 System.out.println("Locked on target.");
-                if (weAreGood == true) {
-                    drive.moveDistance(18, .25);
+            } else if (yellowValue < 1500 || greenValue < 1500) { // we need to turn
+                if (yellowValue < 1500) {
+                    System.out.println("Too far to the left.");
+                    Robot.drivingClass.bl.set(ControlMode.PercentOutput, 0.3);
+                    Robot.drivingClass.br.set(ControlMode.PercentOutput, 0.3);
+                } else if (greenValue < 1500) {
+                    System.out.println("Too far to the right.");
+                    Robot.drivingClass.bl.set(ControlMode.PercentOutput, -0.3);
+                    Robot.drivingClass.br.set(ControlMode.PercentOutput, -0.3);
                 }
-            } else if (yellowValue < 1000 || greenValue < 1000 || orangeValue < 1000) { // we need to make a turn to
-                                                                                        // find target
-                System.out.println("NOT on target.");
-                System.out.println("Yellow: " + yellowValue);
-                System.out.println("Green: " + greenValue);
-                System.out.println("Orange: " + orangeValue);
-                // if () {
-                // System.out.println("Turn to right.");
-                // System.out.println("Turn to left.");
-                if (weWantToAdjust == true) {
-                    drive.turnAngle(5);
-                } else {
-                    drive.moveDistance(0, 0);
-                }
+            } else {
+                Robot.drivingClass.bl.set(ControlMode.PercentOutput, 0);
+                Robot.drivingClass.br.set(ControlMode.PercentOutput, 0);
             }
         }
     }
