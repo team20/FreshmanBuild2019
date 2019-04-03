@@ -48,9 +48,9 @@ public class Drive implements PIDOutput {
         startDistance = 0;
         startDistanceSet = false;
         
-        PID = new PIDController(.01, 0.0, .01, Robot.NAVXgyro, this);
+        PID = new PIDController(.05, 0.0, 0, Robot.NAVXgyro, this);
         
-        PID.setAbsoluteTolerance(5);
+        PID.setAbsoluteTolerance(0);
         PID.setInputRange(-180, 180);
         PID.setOutputRange(-1, 1);
         PID.setContinuous();
@@ -86,23 +86,17 @@ public class Drive implements PIDOutput {
         }
     }
 
-    // public void kevinsDrive(double straight, double rightTurn, double leftTurn){
-    //         bl.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
-    //         br.set(ControlMode.PercentOutput, (-straight - rightTurn + leftTurn));     
-    // }
-
-
     public boolean turnAngle(double setpoint) {
-        if (firstTime == false) {
-            firstTime = true;
-        //    PID.enable(); ???
-            PID.setSetpoint(setpoint);
-            Robot.NAVXgyro.reset();
-        }
+        // if (!firstTime) {
+        //     firstTime = true;
+        Robot.NAVXgyro.reset();
+        PID.enable();
+        PID.setSetpoint(setpoint);
         if (!PID.onTarget()) {
-            System.out.println("Angle: " + PIDValue);
+            System.out.println("Value: " + PIDValue);
             bl.set(ControlMode.PercentOutput, (PIDValue));
             br.set(ControlMode.PercentOutput, (PIDValue));
+            System.out.println("Error: " + PID.getError());
             return false;
         } else {
             bl.set(ControlMode.PercentOutput, (0));

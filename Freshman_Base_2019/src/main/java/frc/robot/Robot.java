@@ -70,27 +70,23 @@ public class Robot extends TimedRobot {
 
      @Override
      public void teleopPeriodic() {
-    //     boolean bButtonPress = driverJoy.getRawButton(2);
-    //     if (bButtonPress && !buttonPrev) {
-    //         buttonEnable = !buttonEnable;
-    //     }
-    //     buttonPrev = bButtonPress;
-    //     double straightSpeed = driverJoy.getRawAxis(1) * .75;
-    //     double speedLeft = driverJoy.getRawAxis(2) * .75;
-    //     double speedRight = driverJoy.getRawAxis(3) * .75;
-    //     if (buttonEnable == false) {
-    //         straightSpeed = -1*(straightSpeed);
-    //         speedLeft = -1*(speedLeft);
-    //         speedRight = -1*(speedRight);
-    //     }
 
         drivingClass.move(driverJoy.getRawAxis(1)*.75, driverJoy.getRawAxis(2)*.75, driverJoy.getRawAxis(3)*.75);
         spinningIntake.spinIntake(driverJoy.getRawButton(1), driverJoy.getRawButton(4), driverJoy.getRawButton(2));
-       shootNow.operatorShoot(operatorJoy.getRawAxis(1), operatorJoy.getRawAxis(5));
+        shootNow.operatorShoot(operatorJoy.getRawAxis(1), operatorJoy.getRawAxis(5));
         maticsMatics.openGrabbyClaw(operatorJoy.getRawAxis(2));
         maticsMatics.hatchCollector(operatorJoy.getRawButton(3), operatorJoy.getRawButton(1));
-        // lineFollower.wheresLinay(driverJoy.getRawButton(7),
-    }
+    //    lineFollower.wheresLinay();
+    //    lineFollower.linay();
+
+        // if (driverJoy.getRawButton(1)) {
+        //     drivingClass.turnAngle(5);
+        // }
+        // else {
+        //     drivingClass.bl.set(ControlMode.PercentOutput, (0));
+        //     drivingClass.br.set(ControlMode.PercentOutput, (0));
+        //     drivingClass.PID.disable();
+        }
 
     @Override
     public void testInit() {
@@ -99,7 +95,5 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testPeriodic() {
-        // lineFollower.linay();
-        // shootNow.operatorShoot(1, 0);
     }
 }
