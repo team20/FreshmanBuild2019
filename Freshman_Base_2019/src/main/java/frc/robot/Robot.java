@@ -4,7 +4,6 @@ package frc.robot;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.cameraserver.CameraServer;
-//import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -76,17 +75,9 @@ public class Robot extends TimedRobot {
         shootNow.operatorShoot(operatorJoy.getRawAxis(1), operatorJoy.getRawAxis(5));
         maticsMatics.openGrabbyClaw(operatorJoy.getRawAxis(2));
         maticsMatics.hatchCollector(operatorJoy.getRawButton(3), operatorJoy.getRawButton(1));
-    //    lineFollower.wheresLinay();
-    //    lineFollower.linay();
-
-        // if (driverJoy.getRawButton(1)) {
-        //     drivingClass.turnAngle(5);
-        // }
-        // else {
-        //     drivingClass.bl.set(ControlMode.PercentOutput, (0));
-        //     drivingClass.br.set(ControlMode.PercentOutput, (0));
-        //     drivingClass.PID.disable();
-        }
+        lineFollower.wheresLinay();
+        lineFollower.linay();
+    }
 
     @Override
     public void testInit() {

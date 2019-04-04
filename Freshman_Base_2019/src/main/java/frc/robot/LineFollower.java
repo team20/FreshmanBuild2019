@@ -37,24 +37,27 @@ public class LineFollower {
     public void wheresLinay() {
         int yellowValue = yellow.getValue();
         int greenValue = green.getValue();
-        if (Robot.driverJoy.getRawButton(3)) {
-            System.out.println("Yellow: " + yellowValue);
-            System.out.println("Green: " + greenValue);
+        if (Robot.driverJoy.getRawButton(7)) {
             if (yellowValue > 1500 && greenValue > 1500) { // we're on target
                 System.out.println("Locked on target.");
-            } else if (yellowValue < 1500 || greenValue < 1500) { // we need to turn
-                if (yellowValue < 1500) {
-                    System.out.println("Too far to the left.");
-                    Robot.drivingClass.bl.set(ControlMode.PercentOutput, 0.3);
-                    Robot.drivingClass.br.set(ControlMode.PercentOutput, 0.3);
-                } else if (greenValue < 1500) {
-                    System.out.println("Too far to the right.");
-                    Robot.drivingClass.bl.set(ControlMode.PercentOutput, -0.3);
-                    Robot.drivingClass.br.set(ControlMode.PercentOutput, -0.3);
-                }
-            } else {
                 Robot.drivingClass.bl.set(ControlMode.PercentOutput, 0);
                 Robot.drivingClass.br.set(ControlMode.PercentOutput, 0);
+            } else { // we need to turn to the right???
+                System.out.println("Too far to the left. Making right turn.");
+                Robot.drivingClass.bl.set(ControlMode.PercentOutput, 0.3);
+                Robot.drivingClass.br.set(ControlMode.PercentOutput, 0.3);
+            }
+        }
+        if (Robot.driverJoy.getRawButton(8)) {
+            if (yellowValue > 1500 && greenValue > 1500) {
+                System.out.println("Locked on target.");
+                Robot.drivingClass.bl.set(ControlMode.PercentOutput, 0);
+                Robot.drivingClass.br.set(ControlMode.PercentOutput, 0);
+            }
+            else { // we need to turn to the left???
+                System.out.println("Too far to the right. Making left turn.");
+                Robot.drivingClass.bl.set(ControlMode.PercentOutput, -0.3);
+                Robot.drivingClass.br.set(ControlMode.PercentOutput, -0.3);   
             }
         }
     }
