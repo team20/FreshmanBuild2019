@@ -24,7 +24,7 @@ public class RealAutos {
             return false;
         } else if (Robot.autostage == 2) {
             if (Robot.drivingClass.moveDistance(distance, speed) == true) {
-                Robot.autostage++;
+                ++Robot.autostage;
                 return false;
             }
             return false;

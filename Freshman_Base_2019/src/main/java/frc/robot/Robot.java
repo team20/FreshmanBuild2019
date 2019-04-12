@@ -67,16 +67,14 @@ public class Robot extends TimedRobot {
 
     }
 
-     @Override
-     public void teleopPeriodic() {
+    @Override
+    public void teleopPeriodic() {
 
-        drivingClass.move(driverJoy.getRawAxis(1)*.75, driverJoy.getRawAxis(2)*.75, driverJoy.getRawAxis(3)*.75);
+        drivingClass.move(driverJoy.getRawAxis(1)*.3, driverJoy.getRawAxis(2)*.3, driverJoy.getRawAxis(3)*.3);
         spinningIntake.spinIntake(driverJoy.getRawButton(1), driverJoy.getRawButton(4), driverJoy.getRawButton(2));
         shootNow.operatorShoot(operatorJoy.getRawAxis(1), operatorJoy.getRawAxis(5));
         maticsMatics.openGrabbyClaw(operatorJoy.getRawAxis(2));
         maticsMatics.hatchCollector(operatorJoy.getRawButton(3), operatorJoy.getRawButton(1));
-        lineFollower.wheresLinay();
-        lineFollower.linay();
     }
 
     @Override

@@ -61,9 +61,14 @@ public class Drive implements PIDOutput {
     }
 
     public void move(double straight, double rightTurn, double leftTurn) {
-        bl.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
-        br.set(ControlMode.PercentOutput, (-straight - rightTurn + leftTurn));
+        bl.set(ControlMode.PercentOutput, (-straight - rightTurn + leftTurn));
+        br.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
     }
+
+    // public void doNothing() {
+    //     bl.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
+    //     br.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
+    // }
 
     public boolean moveDistance(double distance, double speed) {
         if (startDistanceSet == false) {
@@ -122,3 +127,5 @@ public class Drive implements PIDOutput {
         br.getSensorCollection().setQuadraturePosition(pulseWidth, kTimeoutMs);
     }
 }
+
+//Kayla was here

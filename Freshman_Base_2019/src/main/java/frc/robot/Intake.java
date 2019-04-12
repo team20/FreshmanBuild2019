@@ -25,4 +25,5 @@ public class Intake {
             intake.set(ControlMode.PercentOutput, 0);
         }
     }
+    
 }
