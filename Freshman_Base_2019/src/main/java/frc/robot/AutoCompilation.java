@@ -12,13 +12,13 @@ public class AutoCompilation {
         startTime = 0;
     }
 
-    public boolean pickUpTheBall(boolean forward, boolean reverse, boolean stop) {
+    public boolean pickUpTheBall() {
         if (Robot.firstTime) {
             Robot.firstTime = false;
             Robot.NAVXgyro.reset();
         }
         if (Timer.getFPGATimestamp() - startTime <= 5) {
-            Robot.spinningIntake.spinIntake(forward, reverse, stop);
+            Robot.spinningIntake.spinIntake(true, false, false);
             return false;
         }
         else {
@@ -27,13 +27,13 @@ public class AutoCompilation {
         }
     }
     
-    public boolean shootTheBall(double shoot, double halfShoot) {
+    public boolean shootTheBall() {
         if (Robot.firstTime) {
             Robot.firstTime = false;
             Robot.NAVXgyro.reset();
         }
         if (Timer.getFPGATimestamp() - startTime <= 2) {
-            Robot.shootNow.operatorShoot(shoot, halfShoot);;
+            Robot.shootNow.operatorShoot(0, .5);
             return false;
         }
         else {

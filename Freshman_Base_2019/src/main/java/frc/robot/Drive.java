@@ -61,14 +61,9 @@ public class Drive implements PIDOutput {
     }
 
     public void move(double straight, double rightTurn, double leftTurn) {
-        bl.set(ControlMode.PercentOutput, (-straight - rightTurn + leftTurn));
-        br.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
+        bl.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
+        br.set(ControlMode.PercentOutput, (-straight - rightTurn + leftTurn));
     }
-
-    // public void doNothing() {
-    //     bl.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
-    //     br.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
-    // }
 
     public boolean moveDistance(double distance, double speed) {
         if (startDistanceSet == false) {
@@ -80,8 +75,29 @@ public class Drive implements PIDOutput {
         System.out.println("startDistance" + startDistance);
         System.out.println("distance_traveled" + distance_traveled);
         if (Math.abs(distance_traveled) < distance) {
-            br.set(ControlMode.PercentOutput, -1*(speed));
-            bl.set(ControlMode.PercentOutput, speed);
+            br.set(ControlMode.PercentOutput, (speed));
+            bl.set(ControlMode.PercentOutput, -1*(speed));
+            return false;
+        } else {
+            br.set(ControlMode.PercentOutput, (0));
+            bl.set(ControlMode.PercentOutput, (0));
+            Robot.NAVXgyro.reset();
+            return true;
+        }
+    }
+
+    public boolean spin(double distance, double speed) {
+        if (startDistanceSet == false) {
+            startDistance = (br.getSelectedSensorPosition());
+            startDistanceSet = true;
+        }
+        distance_traveled = ((br.getSelectedSensorPosition()) - startDistance)/ticksPerInch;
+        System.out.println("backright encoder" + br.getSelectedSensorPosition());
+        System.out.println("startDistance" + startDistance);
+        System.out.println("distance_traveled" + distance_traveled);
+        if (Math.abs(distance_traveled) < distance) {
+            br.set(ControlMode.PercentOutput, (speed));
+            bl.set(ControlMode.PercentOutput, (speed));
             return false;
         } else {
             br.set(ControlMode.PercentOutput, (0));

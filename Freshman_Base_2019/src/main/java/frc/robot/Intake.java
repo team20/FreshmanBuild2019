@@ -3,6 +3,8 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class Intake {
     TalonSRX intake;
     double intakeSpeed;
@@ -23,6 +25,22 @@ public class Intake {
         }
         else if (stop == true) {
             intake.set(ControlMode.PercentOutput, 0);
+        }
+    }
+
+    public boolean autoIntake() {
+        if ((Timer.getFPGATimestamp() - Robot.startTime) <= 3) {
+            System.out.println("This is running.");
+            intake.set(ControlMode.PercentOutput, -1);
+            return false;
+        }
+        else if ((Timer.getFPGATimestamp() - Robot.startTime) > 3) {
+            System.out.println("This is done.");
+            intake.set(ControlMode.PercentOutput, 0);
+            return true;
+        }
+        else {
+            return false;
         }
     }
     
