@@ -1,17 +1,22 @@
-package frc.robot;
+package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Robot;
 
 public class Shooter {
-    VictorSPX shooter;
+    static VictorSPX shooter;
 
     public Shooter() {
         shooter = new VictorSPX(6);
     }
 
+    public static void setSpeed(double speed) {
+        shooter.set(ControlMode.PercentOutput, speed);
+    }
+    
     public void operatorShoot(double go, double halfShoot) {
         if (go < -0.5) {
             shooter.set(ControlMode.PercentOutput, -1);
@@ -22,19 +27,12 @@ public class Shooter {
         } else if (halfShoot > 0.5) {
             shooter.set(ControlMode.PercentOutput, .6);
         }
-        // } else if (Robot.driverJoy.getRawButton(1) == true) {
-        // shooter.set(ControlMode.PercentOutput, -1);
-        // } else if (Robot.driverJoy.getRawButton(4) == true) {
-        // shooter.set(ControlMode.PercentOutput, -1);
-        // } else if (Robot.driverJoy.getRawButton(2) == true) {
-        // shooter.set(ControlMode.PercentOutput, 0);
-        // }
         else {
             shooter.set(ControlMode.PercentOutput, 0);
         }
     }
 
-    public void autoShoot() {
+    public static void autoShoot() {
         if ((Timer.getFPGATimestamp() - Robot.startTime) <= 4) {
             shooter.set(ControlMode.PercentOutput, -1);
         }
@@ -44,8 +42,4 @@ public class Shooter {
         else {
         }
     }
-
-    // public void autoShoot() {
-    // shooter.set(ControlMode.PercentOutput, -.5);
-    // }
 }
