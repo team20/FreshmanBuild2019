@@ -8,13 +8,23 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.autos.AutoCompilation;
+import frc.robot.autos.RealAutos;
+import frc.robot.controls.DriverControls;
+import frc.robot.controls.OperatorControls;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.HatchCollector;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LineFollower;
+import frc.robot.subsystems.Shooter;
+
 import java.lang.Math;
 
 public class Robot extends TimedRobot {
-    static Joystick driverJoy;
+    public static Joystick driverJoy;
     static Joystick operatorJoy;
 
-    static boolean firstTime = true;
+    public static boolean firstTime = true;
     static boolean buttonEnable = false, buttonPrev = false;
 
     final int firstDistance = 120;
@@ -22,12 +32,15 @@ public class Robot extends TimedRobot {
 
     static int autostage = 0;
 
-    static AHRS NAVXgyro = new AHRS(SerialPort.Port.kMXP);
+    public static AHRS NAVXgyro = new AHRS(SerialPort.Port.kMXP);
 
-    static Drive drivingClass = new Drive();
-    static Intake spinningIntake = new Intake();
-    static Shooter shootNow = new Shooter();
-    static Pneumatics maticsMatics = new Pneumatics();
+    DriverControls driver = new DriverControls(2);
+    OperatorControls operator = new OperatorControls(1);
+
+    static Drivetrain drivingClass = new Drivetrain();
+    public static Intake spinningIntake = new Intake();
+    public static Shooter shootNow = new Shooter();
+    static HatchCollector maticsMatics = new HatchCollector();
     static LineFollower lineFollower = new LineFollower();
     static RealAutos autos = new RealAutos();
     static AutoCompilation tryAutosAgain = new AutoCompilation();
@@ -37,21 +50,21 @@ public class Robot extends TimedRobot {
 
     boolean startTimeSet = false;
     boolean startTimeSetTwo = false;
-    static double startTime = 0;
+    public static double startTime = 0;
     static double goNow = 0;
 
     double pi = Math.PI;
 
     @Override
     public void robotInit() {
-        driverJoy = new Joystick(1);
-        operatorJoy = new Joystick(0);
+        driverJoy = new Joystick(0);
+        operatorJoy = new Joystick(1);
         CameraServer.getInstance().startAutomaticCapture();
         NAVXgyro.reset();
         drivingClass.initQuadrature();
     }
 
-    @Override
+	@Override
     public void autonomousInit() {
 
         if (startTimeSet == false) {
@@ -70,25 +83,25 @@ public class Robot extends TimedRobot {
         if (!drivingClass.moveDistance(60, .25)) {
             drivingClass.moveDistance(60, .25);
         } else if (drivingClass.moveDistance(60, .25)) {
-            shootNow.autoShoot();
+            frc.robot.subsystems.Shooter.autoShoot();
         }
-
-        //drivingClass.spin((22.5 * pi), .25);
     }
 
     @Override
     public void teleopPeriodic() {
 
-        drivingClass.move(driverJoy.getRawAxis(1) * .3, driverJoy.getRawAxis(2) * .3, driverJoy.getRawAxis(3) * .3);
+        driver.controls();
+        operator.controls();        
+        
+        Drivetrain.drive(driverJoy.getRawAxis(1) * 1, driverJoy.getRawAxis(2) * 1, driverJoy.getRawAxis(3) * 1);
         spinningIntake.spinIntake(driverJoy.getRawButton(1), driverJoy.getRawButton(4), driverJoy.getRawButton(2));
         shootNow.operatorShoot(operatorJoy.getRawAxis(1), operatorJoy.getRawAxis(5));
-        maticsMatics.openGrabbyClaw(operatorJoy.getRawAxis(2));
-        maticsMatics.hatchCollector(operatorJoy.getRawButton(3), operatorJoy.getRawButton(1));
+        maticsMatics.openClaw(operatorJoy.getRawAxis(2));
+        maticsMatics.moveToSafety(operatorJoy.getRawButton(3), operatorJoy.getRawButton(1));
     }
 
     @Override
     public void testInit() {
-
     }
 
     @Override

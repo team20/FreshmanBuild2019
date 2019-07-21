@@ -1,6 +1,7 @@
-package frc.robot;
+package frc.robot.autos;
 
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Robot;
 
 public class AutoCompilation {
 

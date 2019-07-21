@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.autos;
 
 public class RealAutos {
     static AutoCompilation autos;

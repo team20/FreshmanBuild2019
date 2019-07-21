@@ -1,17 +1,19 @@
-package frc.robot;
+package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import frc.robot.Robot;
 
-public class Drive implements PIDOutput {
+public class Drivetrain implements PIDOutput {
 
-    TalonSRX fl;
-    TalonSRX fr;
-    TalonSRX bl;
-    TalonSRX br;
+    static TalonSRX fl;
+    static TalonSRX fr;
+    static TalonSRX bl;
+    static TalonSRX br;
+	public static Object drive;
     double distance_traveled;
     final int ticksPerInch = 233;
     boolean firstTime,toggle=true;
@@ -25,7 +27,7 @@ public class Drive implements PIDOutput {
     boolean startDistanceSet;
     boolean toggleMove = false;
 
-    public Drive() {
+    public Drivetrain() {
         fl = new TalonSRX(1);
         fr = new TalonSRX(2);
         bl = new TalonSRX(3);
@@ -60,9 +62,9 @@ public class Drive implements PIDOutput {
 
     }
 
-    public void move(double straight, double rightTurn, double leftTurn) {
-        bl.set(ControlMode.PercentOutput, (straight - rightTurn + leftTurn));
-        br.set(ControlMode.PercentOutput, (-straight - rightTurn + leftTurn));
+    public static void drive(double speedStraight, double speedRight, double speedLeft) {
+        bl.set(ControlMode.PercentOutput, (speedStraight - speedRight + speedLeft));
+        br.set(ControlMode.PercentOutput, (-speedStraight - speedRight + speedLeft));
     }
 
     public boolean moveDistance(double distance, double speed) {
@@ -92,9 +94,6 @@ public class Drive implements PIDOutput {
             startDistanceSet = true;
         }
         distance_traveled = ((br.getSelectedSensorPosition()) - startDistance)/ticksPerInch;
-        System.out.println("backright encoder" + br.getSelectedSensorPosition());
-        System.out.println("startDistance" + startDistance);
-        System.out.println("distance_traveled" + distance_traveled);
         if (Math.abs(distance_traveled) < distance) {
             br.set(ControlMode.PercentOutput, (speed));
             bl.set(ControlMode.PercentOutput, (speed));
@@ -143,5 +142,3 @@ public class Drive implements PIDOutput {
         br.getSensorCollection().setQuadraturePosition(pulseWidth, kTimeoutMs);
     }
 }
-
-//Kayla was here
