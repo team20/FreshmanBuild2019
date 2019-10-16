@@ -5,45 +5,31 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class HatchCollector {
 
-    static DoubleSolenoid claw;
-    static DoubleSolenoid safetyPosition;
+    private static DoubleSolenoid claw;
+    private static DoubleSolenoid elbow;
+    private static Compressor compressor;
 
-    public HatchCollector() {
-        Compressor compressor = new Compressor();
+    static {
+        //Initialize the compressor and solenoids
+        compressor = new Compressor();
         compressor.setClosedLoopControl(true);
-        claw = new DoubleSolenoid(2, 3); //first number is forward channel, second number is reverse channel
-        safetyPosition = new DoubleSolenoid(0, 1);
+        claw = new DoubleSolenoid(2, 3);
+        elbow = new DoubleSolenoid(0, 1);
     }
 
-    public static void setPosition(String position) {
-        if(position == "closed") {
-            claw.set(DoubleSolenoid.Value.kForward);
-        }
-        if(position == "open") {
-            claw.set(DoubleSolenoid.Value.kReverse);
-        }
-        if(position == "forward") {
-            safetyPosition.set(DoubleSolenoid.Value.kReverse);
-        }
-        if(position == "backward") {
-            safetyPosition.set(DoubleSolenoid.Value.kForward);
-        }
-    }
-    
-    public void openClaw(double open) {
-        if (open > 0.1) {
-            claw.set(DoubleSolenoid.Value.kForward);
-        }
-        else {
-            claw.set(DoubleSolenoid.Value.kReverse);
-        }
+    public static void openClaw() {
+        claw.set(DoubleSolenoid.Value.kReverse);
     }
 
-    public void moveToSafety(boolean goForward, boolean goBackwards) {
-        if (goForward == true) {
-            safetyPosition.set(DoubleSolenoid.Value.kReverse);
-        } else if (goBackwards == true) {
-            safetyPosition.set(DoubleSolenoid.Value.kForward);
-        }
+    public static void closeClaw() {
+        claw.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public static void extendElbow() {
+        elbow.set(DoubleSolenoid.Value.kReverse);
+    }
+
+    public static void retractElbow() {
+        elbow.set(DoubleSolenoid.Value.kForward);
     }
 }
