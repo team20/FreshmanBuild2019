@@ -14,8 +14,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        driverControls = new DriverControls(1);
-        operatorControls = new OperatorControls(2);
+        driverControls = new DriverControls(0);
+        operatorControls = new OperatorControls(1);
         CameraServer.getInstance().startAutomaticCapture();
     }
 
