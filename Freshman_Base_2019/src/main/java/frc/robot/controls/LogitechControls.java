@@ -10,8 +10,16 @@ public class LogitechControls {
         joy = new Joystick(port);
     }
 
-    //All buttons
-    
+    //Buttons
+
+    public boolean getAButton() {
+        return joy.getRawButton(1);
+    }
+
+    public boolean getBButton() {
+        return joy.getRawButton(2);
+    }
+
     public boolean getXButton() {
         return joy.getRawButton(3);
     }
@@ -20,42 +28,42 @@ public class LogitechControls {
         return joy.getRawButton(4);
     }
 
-    public boolean getBButton() {
-        return joy.getRawButton(2);
+    public boolean getLeftShoulderButton() {
+        return joy.getRawButton(5);
     }
 
-    public boolean getAButton() {
-        return joy.getRawButton(1);
+    public boolean getRightShoulderButton() {
+        return joy.getRawButton(6);
     }
 
-    //All axes
-    
-    public double getLeftYAxis() {
-        return joy.getRawAxis(1);
-    }
+    //Axes
 
     public double getLeftXAxis() {
         return joy.getRawAxis(0);
     }
 
-    public double getRightYAxis() {
-        return joy.getRawAxis(5);
+    public double getLeftYAxis() {
+        return joy.getRawAxis(1);
     }
 
     public double getRightXAxis() {
         return joy.getRawAxis(4);
     }
 
+    public double getRightYAxis() {
+        return joy.getRawAxis(5);
+    }
+
     public double getLeftTrigger() {
-        return (joy.getRawAxis(3));
+        return (joy.getRawAxis(2));
     }
 
     public double getRightTrigger() {
-        return (joy.getRawAxis(4));
+        return (joy.getRawAxis(3));
     }
 
-    //All DPad that probably won't work
-    
+    //D-PAD
+
     public boolean getDPadUp() {
         return joy.getPOV() == 0;
     }

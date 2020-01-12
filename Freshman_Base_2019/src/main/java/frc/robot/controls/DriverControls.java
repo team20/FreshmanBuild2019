@@ -1,71 +1,51 @@
 package frc.robot.controls;
 
-//import frc.robot.Drivetrain;
-//import frc.robot.Intake;
-
-//TRY TOGGLE USING THE D-PAD???
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 
 public class DriverControls extends LogitechControls {
-    
-    double left;
-    double right;
-    double straight;
-        
+
+    private double turningMultiplier = .75, slowTurningSpeed = .3;
+
     public DriverControls(int port) {
         super(port);
     }
 
-    public void driverControls() {
-        controls();
-    }
-
     public void controls() {
-    straight = 0;
-    left = 0;
-    right = 0;
-    if(getDPadLeft()) {
-        if(Math.abs(getLeftYAxis()) > 0.1) {
-            straight = getLeftYAxis();
-        }
-        if(getLeftTrigger() > 0.1) {
-            left = getLeftTrigger();
-        }
-        if(getRightTrigger() > 0.1) {
-            right = getRightTrigger();
-        }
+        /*
+         * Drivetrain 
+         * Left Y axis - forward and back 
+         * Triggers - left and right
+         * Bumpers - slower left and right
+         * A - run intake forward
+         * Y - run intake backwards
+         * B - stop intake
+         */
 
-            frc.robot.subsystems.Drivetrain.drive(straight, right, left);
-    }
-    else if (getDPadRight()) {
-        if(Math.abs(getLeftYAxis()) > 0.1) {
-            straight = -getLeftYAxis();
-        }
-        if(getLeftTrigger() > 0.1) {
-            left = -getLeftTrigger();
-        }
-        if(getRightTrigger() > 0.1) {
-            right = -getRightTrigger();
-        }
+        // Drivetrain
+        double leftYAxis = getLeftYAxis();
+        double rightTrigger = getRightTrigger();
+        double leftTrigger = getLeftTrigger();
 
-            frc.robot.subsystems.Drivetrain.drive(straight, right, left);
-    }   
-        if(getAButton()) {
-            frc.robot.subsystems.Intake.setSpeed(-1);
+        boolean rightShoulderButton = getRightShoulderButton();
+        boolean leftShoulderButton = getLeftShoulderButton();
+
+        double speedStraight = Math.abs(leftYAxis) > .08 ? leftYAxis : 0;
+        double speedRight = rightTrigger > .15 ? rightTrigger * turningMultiplier
+                : rightShoulderButton ? slowTurningSpeed : 0;
+        double speedLeft = leftTrigger > .15 ? leftTrigger * turningMultiplier
+                : leftShoulderButton ? slowTurningSpeed : 0;
+        Drivetrain.drive(speedStraight, speedRight, speedLeft);
+
+        // Intake
+        if (getAButton()) {
+            Intake.run(false);
         }
-        if(getBButton()) {
-            frc.robot.subsystems.Intake.stop();
+        if (getYButton()) {
+            Intake.run(true);
         }
-        if(getXButton()) {
-            frc.robot.subsystems.Intake.setSpeed(1);
-        }
-        if(!getAButton()) {
-            frc.robot.subsystems.Intake.stop();
-        }
-        if(!getBButton()) {
-            frc.robot.subsystems.Intake.stop();
-        }
-        if(!getXButton()) {
-            frc.robot.subsystems.Intake.stop();
+        if (getBButton()) {
+            Intake.stop();
         }
     }
 }

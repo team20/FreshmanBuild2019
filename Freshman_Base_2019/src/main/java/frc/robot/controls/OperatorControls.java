@@ -1,50 +1,45 @@
 package frc.robot.controls;
 
-//import frc.robot.HatchCollector;
-//import frc.robot.Shooter;
+import frc.robot.subsystems.HatchCollector;
+import frc.robot.subsystems.Shooter;
 
 public class OperatorControls extends LogitechControls {
-
-    String forward;
-    String backward;
-    String open;
-    String closed;
 
     public OperatorControls(int port) {
         super(port);
     }
 
-    public void operatorControls() {
-        controls();
-    }
-
     public void controls() {
-        if (getLeftYAxis() > 0.5) {
-            frc.robot.subsystems.Shooter.setSpeed(1);
+        /*
+        Hatch collector
+        Left trigger - closes claw
+        "A" - elbow in
+        "X" - elbow out
+
+        Shooter
+        Left Y axis - shoots full speed
+        Right Y axis - shoots half speed
+         */
+
+        //Hatch collector
+        //Claw
+        if (getLeftTrigger() > .1) {
+            HatchCollector.closeClaw();
+        }else{
+            HatchCollector.openClaw();
         }
-        if (getLeftYAxis() < -0.5) {
-            frc.robot.subsystems.Shooter.setSpeed(-1);
-        }
-        if (getRightYAxis() > 0.5) {
-            frc.robot.subsystems.Shooter.setSpeed(0.6);
-        }
-        if (getRightYAxis() < -0.5) {
-            frc.robot.subsystems.Shooter.setSpeed(-0.6);
-        }
-        if (getLeftYAxis() < 0.5 && getLeftYAxis() > -0.5 && getRightYAxis() < 0.5 && getRightYAxis() > -0.5) {
-            frc.robot.subsystems.Shooter.setSpeed(0);
-        }
-        if (getRightTrigger() > 0.1) {
-            frc.robot.subsystems.HatchCollector.setPosition(closed);
-        }
-        if (getRightTrigger() < 0.1) {
-            frc.robot.subsystems.HatchCollector.setPosition(open);
-        }
+        //Elbow
         if (getXButton()) {
-            frc.robot.subsystems.HatchCollector.setPosition(forward);
+            HatchCollector.extendElbow();
         }
         if (getAButton()) {
-            frc.robot.subsystems.HatchCollector.setPosition(backward);
+            HatchCollector.retractElbow();
         }
+
+        //Shooter
+        double leftYAxis = getLeftYAxis();
+        double rightYAxis = getRightYAxis();
+        double speed = Math.abs(leftYAxis) > .08 ? leftYAxis : Math.abs(rightYAxis) > .08 ? rightYAxis * .45 : 0;
+        Shooter.shoot(speed);
     }
 }
